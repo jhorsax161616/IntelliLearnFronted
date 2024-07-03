@@ -1,4 +1,32 @@
+import React from 'react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 function Register() {
+  const [dataForm, setDataForm] = useState({})
+  let navigate = useNavigate()
+
+  const handlerFormInput = (e) => {
+    setDataForm({
+      ...dataForm,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handlerFormSubmit = async (e) => {
+    e.preventDefault()
+    
+    await fetch('http://localhost:8000/estudiantes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataForm)
+    })
+
+    return navigate('/')
+  }
+
     return (
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div
@@ -24,7 +52,7 @@ function Register() {
         </div>
 
         <div class="mt-10">
-          <form action="#">
+          <form action="#" onSubmit={ handlerFormSubmit }>
             <div class="flex flex-col mb-5">
               <label
                 for="nombres"
@@ -65,6 +93,8 @@ function Register() {
                   "
                   placeholder="Ingresa tu nombre"
                   required
+                  onChange={ handlerFormInput }
+                  value={dataForm.nombres}
                 />
               </div>
             </div>
@@ -108,6 +138,8 @@ function Register() {
                   "
                   placeholder="Ingresa tus Apellidos"
                   required
+                  onChange={ handlerFormInput }
+                  value={dataForm.apellidos}
                 />
               </div>
             </div>
@@ -151,6 +183,8 @@ function Register() {
                   "
                   placeholder="Ingresa tu correo institucional"
                   required
+                  onChange={ handlerFormInput }
+                  value={dataForm.correo}
                 />
               </div>
             </div>
@@ -178,7 +212,7 @@ function Register() {
 
                     <select
                     id="universidad"
-                    name="universidad"
+                    name="universidad_id"
                     class="
                         text-sm
                         placeholder-gray-500
@@ -191,11 +225,13 @@ function Register() {
                         focus:outline-none focus:border-blue-400
                     "
                     placeholder="Selecciona tu universidad"
+                    onChange={ handlerFormInput }
+                    value={dataForm.universidad_id}
                     >
                     <option value="" disabled selected>Selecciona tu universidad</option>
-                    <option value="1">Universidad Continental</option>
-                    <option value="2">UPLA</option>
-                    <option value="3">UNCP</option>
+                    <option value={1}>Universidad Continental</option>
+                    <option value={2}>UPLA</option>
+                    <option value={3}>UNCP</option>
                     </select>
                 </div>
                 </div>
@@ -241,6 +277,8 @@ function Register() {
                   "
                   placeholder="Enter your password"
                   required
+                  onChange={ handlerFormInput }
+                  value={dataForm.hashed_password}
                 />
               </div>
             </div>
@@ -301,12 +339,11 @@ function Register() {
         >
           <span class="ml-2"
             >You have an account?
-            <a
-              href="#"
+            <Link
+              to="/register"
               class="text-xs ml-2 text-blue-500 font-semibold"
-              >Login here</a
-            ></span
-          >
+              >Login here</Link>
+            </span>
         </a>
       </div>
     </div>
